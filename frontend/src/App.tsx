@@ -1,15 +1,19 @@
 import { useState } from 'react'
+import PageLayout from './components/PageLayout'
+import FileUploader from './components/FileUploader'
 
 function App() {
-  const [count, setCount] = useState(0)
+	const [count, setCount] = useState(0)
 
-  return (
-    <>
-      <div className="main">
-		<h1 className='text-3xl font-bold underline'>Spend Tracker</h1>
-	  </div>
-    </>
-  )
+	return (
+		<>
+			<PageLayout>
+				<h1 className="text-lg p-4">Try Uploading a file</h1>
+
+				<FileUploader />
+			</PageLayout>
+		</>
+	)
 }
 
 export default App
