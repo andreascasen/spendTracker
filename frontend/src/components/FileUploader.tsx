@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { parseFileContents } from '../utils/xlsx'
 
 export default function FileUploader() {
 	const [file, setFile] = useState<File | null>(null)
@@ -11,16 +10,30 @@ export default function FileUploader() {
 	}
 
 	const handleUpload = async () => {
-		if (!file) {
-			return
+		if (file) {
+			console.log('Uploading file ...')
+
+			const formData = new FormData()
+			formData.append('file', file)
+
+			try {
+				const result = await fetch('http://localhost:3000/entry', {
+					method: 'POST',
+					body: formData,
+				})
+
+				const response = await result.json()
+				console.log('Response => ', response)
+			} catch (error) {
+				console.error('Error => ', error)
+			}
 		}
-		const fileContent = await parseFileContents(file)
 	}
 
 	return (
 		<>
 			<div>
-				<input type="file" id="file" onChange={handleFileChange} />
+				<input type="file" id="file" name="entry" onChange={handleFileChange} />
 			</div>
 
 			{file && (
