@@ -14,9 +14,10 @@ export const parseFromBuffer = async (buffer: Buffer) => {
 
 const structureFileContents = (data: any[]) => {
 	const [header, categories, ...rows] = data
-	console.log('Header => ', header[0])
-	console.log('Categories => ', categories)
-	console.log('rows:', rows)
+
+	const parsedData = rows.filter(row => row.length > 0).map(parseRow)
+
+	console.log('parsedData => ', parsedData)
 
 	return data
 
@@ -29,4 +30,17 @@ const structureFileContents = (data: any[]) => {
 	// })
 	// console.log('structuredData:', structuredData)
 	// return structuredData
+}
+
+type rowContent = number | string
+
+const parseRow = (row: rowContent[]) => {
+	const [bookingDate, transactionDate, name, amount, balance] = row
+	return {
+		bookingDate,
+		transactionDate,
+		name,
+		amount,
+		balance,
+	}
 }
