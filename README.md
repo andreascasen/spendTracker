@@ -19,9 +19,14 @@ Because I'm currently running the project locally and uploading files that I man
 
 ## Tech Stack
 
-I'm building this project in a basic NodeJS stack with Express in the backend and React + Vite on the frontend.
+I'm building this project in a basic NodeJS stack:
 
-On the frontend, my idea is to use the frontend project as a vehicle to properly learn a new styling framework. I'm still making my mind up between Tailwind and ShadCN
-When it comes to backend, I'm sticking to the simplest possible implementation because I want to rewrite in Go in a future version, hopefully picking up some skills in that language as I go along.
+**Frontend: React + Vite**
+
+My idea is to use the frontend project as a vehicle to properly learn a new styling framework. I'm still making my mind up between Tailwind and ShadCN
+
+**Back End: Express JS**
+
+I'm sticking to the simplest possible implementation because I want to rewrite in Go in a future version, hopefully picking up some skills in that language as I go along.
 
 ---
