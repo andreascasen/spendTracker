@@ -8,8 +8,6 @@ function App() {
 	return (
 		<>
 			<PageLayout>
-				<h1 className="text-lg p-4">Try Uploading a file</h1>
-
 				<FileUploader />
 			</PageLayout>
 		</>

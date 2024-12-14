@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Card from './Card'
+import UploadFileIcon from '../icons/uploadFile'
+import UploadIcon from '../icons/uploadIcon'
 
 export default function FileUploader() {
 	const [file, setFile] = useState<File | null>(null)
@@ -31,30 +34,39 @@ export default function FileUploader() {
 	}
 
 	return (
-		<>
+		<Card>
+			<h2 className="text-xl mb-4">Upload a file</h2>
 			<div>
-				<input type="file" id="file" name="entry" onChange={handleFileChange} />
+				<label
+					htmlFor="file"
+					className="inline-block cursor-pointer border-2 border-slate-300 text-slate-300 rounded-lg py-2 px-4 "
+				>
+					<UploadFileIcon /> Chose file
+				</label>
+				<input
+					className="hidden"
+					type="file"
+					id="file"
+					name="entry"
+					onChange={handleFileChange}
+				/>
 			</div>
 
-			{file && (
-				<section className="my-8">
-					File details:
-					<ul>
-						<li>Name: {file.name}</li>
-						<li>Type: {file.type}</li>
-						<li>Size: {file.size}</li>
-					</ul>
-				</section>
-			)}
+			<section className="my-8">
+				<ul>
+					<li>{file ? file.name : ''}</li>
+					<li>{file ? file.type : ''}</li>
+					<li>{file ? file.size : ''}</li>
+				</ul>
+			</section>
 
-			{file && (
-				<button
-					onClick={handleUpload}
-					className="py-2 px-4 bg-cyan-500 text-cyan-900 font-bold rounded-sm"
-				>
-					Upload a file
-				</button>
-			)}
-		</>
+			<button
+				onClick={handleUpload}
+				className="py-2 px-6 bg-transparent text-cyan-500 border-2 border-cyan-500 font-bold rounded-lg"
+				disabled={!file}
+			>
+				<UploadIcon /> Upload
+			</button>
+		</Card>
 	)
 }
