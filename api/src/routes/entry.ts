@@ -1,7 +1,7 @@
-import fs from 'fs'
 import multer from 'multer'
 import { Router } from 'express'
-import { parseFromBuffer } from '../utils/xlsx'
+import { parseXlsxFromBuffer } from '../utils/xlsx'
+import { handleMonthlyTransactions } from '../transactions/monthly'
 
 const upload = multer()
 
@@ -10,8 +10,9 @@ export const entryRouter = Router()
 entryRouter.post('/', upload.single('file'), async (req, res) => {
 	const { file } = req
 	if (file?.buffer) {
-		const parsedFileData = await parseFromBuffer(file?.buffer)
-		res.end(JSON.stringify({ message: 'received' }))
+		const fileData = await parseXlsxFromBuffer(file?.buffer)
+		const monthlyTransactions = await handleMonthlyTransactions(fileData)
+		res.end(JSON.stringify({ monthlyTransactions }))
 	} else {
 		res.status(400).send('Bad Request')
 	}
