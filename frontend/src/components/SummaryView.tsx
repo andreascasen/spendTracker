@@ -4,12 +4,12 @@ interface Props {
 	summaries: Sumaries
 }
 
-export default function Summary({ summaries }: Props) {
+export default function SummaryView({ summaries }: Props) {
 	const availableSummaries = Object.keys(summaries)
 
 	return (
 		<div className="pt-4 pb-16">
-			<h1 className="text-4xl">Summaries</h1>
+			<h1 className="text-4xl mb-4">Summaries</h1>
 			{availableSummaries.length === 0 ? (
 				<p>No summaries available</p>
 			) : (

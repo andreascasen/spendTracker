@@ -24,76 +24,78 @@ export default function FileUploader({ onUploadSuccess }: Props) {
 	}
 
 	const handleUpload = async () => {
-		if (file) {
-			console.log('Uploading file ...')
+		if (!file || !month) {
+			throw new Error('Month and file are required')
+		}
 
-			const formData = new FormData()
-			formData.append('file', file)
+		console.log('Uploading file ...')
 
-			try {
-				const result = await fetch('http://localhost:3000/entry', {
-					method: 'POST',
-					body: formData,
-				})
+		const formData = new FormData()
+		formData.append('file', file)
+		formData.append('month', month)
 
-				const { monthlyTransactions } = await result.json()
+		try {
+			const result = await fetch('http://localhost:3000/summary', {
+				method: 'POST',
+				body: formData,
+			})
 
-				onUploadSuccess(monthlyTransactions)
-			} catch (error) {
-				console.error('Error => ', error)
-			}
+			const response = await result.json()
+			console.log('Response => ', response)
+
+			onUploadSuccess(response)
+		} catch (error) {
+			console.error('Error => ', error)
 		}
 	}
 
 	return (
 		<Card>
 			<h2 className="text-2xl mb-4">Upload Summary</h2>
-			<form>
-				<label className="block mb-2" htmlFor="month-select">
-					Select Month
+			<label className="block mb-2" htmlFor="month-select">
+				Select Month
+			</label>
+			<input
+				type="month"
+				id="month-select"
+				name="month-select"
+				className="rounded-lg bg-slate-200 text-slate-950 py-1 px-2 mb-8"
+				onChange={handleMonthChange}
+			/>
+
+			<div className={month ? 'opacity-100' : 'opacity-0'}>
+				<label
+					htmlFor="file"
+					className={`inline-block ${
+						month ? 'cursor-pointer' : ''
+					} border-2 border-slate-${month ? '300' : '500'} text-slate-${
+						month ? '300' : '500'
+					} rounded-lg py-2 px-4 `}
+				>
+					<UploadFileIcon /> Chose file
 				</label>
 				<input
-					type="month"
-					id="month-select"
-					name="month-select"
-					className="rounded-lg bg-slate-200 text-slate-950 py-1 px-2 mb-8"
-					onChange={handleMonthChange}
+					className="hidden"
+					type="file"
+					id="file"
+					name="entry"
+					onChange={handleFileChange}
+					disabled={!month}
 				/>
+			</div>
 
-				<div className={month ? 'opacity-100' : 'opacity-0'}>
-					<label
-						htmlFor="file"
-						className={`inline-block ${
-							month ? 'cursor-pointer' : ''
-						} border-2 border-slate-${month ? '300' : '500'} text-slate-${
-							month ? '300' : '500'
-						} rounded-lg py-2 px-4 `}
-					>
-						<UploadFileIcon /> Chose file
-					</label>
-					<input
-						className="hidden"
-						type="file"
-						id="file"
-						name="entry"
-						onChange={handleFileChange}
-						disabled={!month}
-					/>
-				</div>
+			<p className={`mt-2 ${file ? 'opacity-100' : 'opacity-0'}`}>
+				<span className="font-bold">
+					{file ? file.name : 'No file chosen'}:{' '}
+				</span>
+				{file ? `${Math.round(file.size / 1000)} kb` : ''}
+			</p>
 
-				<p className={`mt-2 ${file ? 'opacity-100' : 'opacity-0'}`}>
-					<span className="font-bold">
-						{file ? file.name : 'No file chosen'}:{' '}
-					</span>
-					{file ? `${Math.round(file.size / 1000)} kb` : ''}
-				</p>
-
-				<div className="mt-8">
-					<Button onClick={handleUpload} disabled={!file}>
-						<UploadIcon /> Submit
-					</Button>
-				</div>
-			</form>
+			<div className="mt-8">
+				<Button onClick={handleUpload} disabled={!file}>
+					<UploadIcon /> Submit
+				</Button>
+			</div>
 		</Card>
 	)
 }

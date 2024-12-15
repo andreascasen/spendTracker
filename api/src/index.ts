@@ -3,7 +3,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
 
-import { entryRouter } from './routes/entry'
+import { summaryRouter } from './routes/summaryRoutes'
 
 dotenv.config()
 
@@ -18,7 +18,7 @@ app.get('/', (req: Request, res: Response) => {
 	res.send('Express + TypeScript Server')
 })
 
-app.use('/entry', entryRouter)
+app.use('/summary', summaryRouter)
 
 app.listen(port, () => {
 	console.log(`[server]: Server is running at http://localhost:${port}`)
