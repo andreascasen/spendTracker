@@ -18,3 +18,5 @@ export const monthlySummarySchema = z.object({
 		})
 	),
 })
+
+export type Sumaries = Record<string, z.infer<typeof monthlySummarySchema>>
