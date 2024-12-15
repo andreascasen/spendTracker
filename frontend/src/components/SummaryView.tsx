@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Sumaries } from '../../../schemas/transactions.schema'
 
 interface Props {
@@ -5,6 +6,11 @@ interface Props {
 }
 
 export default function SummaryView({ summaries }: Props) {
+	const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
+	const onMonthSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setSelectedMonth(e.target.value)
+	}
+
 	const availableSummaries = Object.keys(summaries)
 
 	return (
@@ -13,22 +19,20 @@ export default function SummaryView({ summaries }: Props) {
 			{availableSummaries.length === 0 ? (
 				<p>No summaries available</p>
 			) : (
-				<ul>
-					{availableSummaries.map((month: string, idx: number) => (
-						<li key={idx}>
-							<SummaryMonthItem monthName={month} />
-						</li>
-					))}
-				</ul>
+				<>
+					<label htmlFor="month">Select Month: </label>
+					<select
+						className="rounded-lg py-2 px-4 text-slate-900 mx-4"
+						name="month"
+						id="month"
+						onChange={onMonthSelect}
+					>
+						{availableSummaries.map((month: string, idx: number) => (
+							<option key={idx}>{month}</option>
+						))}
+					</select>
+				</>
 			)}
 		</div>
 	)
-}
-
-interface SummaryMonthItemProps {
-	monthName: string
-}
-
-function SummaryMonthItem({ monthName }: SummaryMonthItemProps) {
-	return <button>{monthName}</button>
 }
