@@ -28,7 +28,7 @@ export default function Index() {
 
 	return (
 		<>
-			<SummaryView summaries={summaries} />
+			<SummaryView sumaries={summaries} />
 
 			<Button onClick={handleToggleUploader}>
 				<UploadIcon /> Upload Summary
