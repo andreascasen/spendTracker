@@ -28,8 +28,6 @@ export default function FileUploader({ onUploadSuccess }: Props) {
 			throw new Error('Month and file are required')
 		}
 
-		console.log('Uploading file ...')
-
 		const formData = new FormData()
 		formData.append('file', file)
 		formData.append('month', month)
@@ -41,8 +39,6 @@ export default function FileUploader({ onUploadSuccess }: Props) {
 			})
 
 			const response = await result.json()
-			console.log('Response => ', response)
-
 			onUploadSuccess(response)
 		} catch (error) {
 			console.error('Error => ', error)

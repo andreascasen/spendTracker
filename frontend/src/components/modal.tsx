@@ -1,4 +1,6 @@
 import { PropsWithChildren, useEffect } from 'react'
+import { Modal as MuiModal } from '@mui/material'
+
 import CloseIcon from '../icons/CloseIcon'
 
 interface ModalProps extends PropsWithChildren {
@@ -7,18 +9,6 @@ interface ModalProps extends PropsWithChildren {
 }
 
 export default function Modal({ display, toggler, children }: ModalProps) {
-	const modalClasses = [
-		display ? 'block' : 'hidden',
-		'fixed',
-		'inset-0',
-		'flex-col',
-		'content-center',
-		'z-10',
-		'p-8',
-		'bg-slate-950/90',
-		'rounded-lg',
-	].join(' ')
-
 	useEffect(() => {
 		const close = (e: KeyboardEvent) => {
 			if (e.key === 'Escape') {
@@ -33,13 +23,15 @@ export default function Modal({ display, toggler, children }: ModalProps) {
 	}, [])
 
 	return (
-		<div className={modalClasses}>
-			{toggler && (
-				<button className="absolute top-4 right-4" onClick={toggler}>
-					<CloseIcon />
-				</button>
-			)}
-			{children}
-		</div>
+		<MuiModal open={display} onClose={toggler}>
+			<>
+				{toggler && (
+					<button className="absolute top-4 right-4" onClick={toggler}>
+						<CloseIcon />
+					</button>
+				)}
+				{children}
+			</>
+		</MuiModal>
 	)
 }

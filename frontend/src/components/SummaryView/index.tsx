@@ -1,4 +1,14 @@
 import { useState } from 'react'
+import {
+	Typography,
+	FormControl,
+	InputLabel,
+	Select,
+	MenuItem,
+	SelectChangeEvent,
+	Paper,
+} from '@mui/material'
+
 import { Sumaries } from '../../../../schemas/transactions.schema'
 import MonthlyView from './MonthlyView'
 
@@ -8,13 +18,13 @@ interface Props {
 
 export default function SummaryView({ sumaries }: Props) {
 	const [selectedMonth, setSelectedMonth] = useState<string | null>(null)
-	const onMonthSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+	const onMonthSelect = (e: SelectChangeEvent) => {
 		setSelectedMonth(e.target.value)
 	}
 
 	return (
-		<div className="pt-4 pb-16">
-			<h1 className="text-4xl mb-4">Summaries</h1>
+		<div>
+			<Typography variant="h3">Sumaries</Typography>
 			<ViewSelector sumaries={sumaries} onMonthSelect={onMonthSelect} />
 
 			{selectedMonth && (
@@ -26,31 +36,41 @@ export default function SummaryView({ sumaries }: Props) {
 
 interface ViewSelectorProps {
 	sumaries: Sumaries
-	onMonthSelect: (e: React.ChangeEvent<HTMLSelectElement>) => void
+	onMonthSelect: (e: SelectChangeEvent) => void
 }
 
 export function ViewSelector({ sumaries, onMonthSelect }: ViewSelectorProps) {
 	const availableMonths = Object.keys(sumaries)
 
 	return (
-		<div className="my-8">
+		<Paper sx={{ marginY: 2, padding: 2 }}>
 			{availableMonths.length === 0 ? (
-				<p>No summaries available</p>
+				<Typography variant="body1" component="p">
+					No summaries available
+				</Typography>
 			) : (
 				<>
-					<label htmlFor="month">Select Month: </label>
-					<select
-						className="rounded-lg py-2 px-4 text-slate-900 mx-4"
-						name="month"
-						id="month"
-						onChange={onMonthSelect}
+					<FormControl
+						color="primary"
+						sx={{ minWidth: 160, borderColor: 'primary.main' }}
 					>
-						{availableMonths.map((month: string, idx: number) => (
-							<option key={idx}>{month}</option>
-						))}
-					</select>
+						<InputLabel id="monthSelect">Select Month: </InputLabel>
+						<Select
+							labelId="monthSelect"
+							id="select-month"
+							value={''}
+							label="Month"
+							onChange={onMonthSelect}
+						>
+							{availableMonths.map((month: string, idx: number) => (
+								<MenuItem key={idx} value={month}>
+									{month}
+								</MenuItem>
+							))}
+						</Select>
+					</FormControl>
 				</>
 			)}
-		</div>
+		</Paper>
 	)
 }

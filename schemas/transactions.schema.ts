@@ -15,9 +15,10 @@ export const groupedTransactionsSchema = z.object({
 
 export const monthlySummarySchema = z.object({
 	total: z.number(),
-	transactions: z.record(z.string(), groupedTransactionsSchema),
+	monthlyTransactions: z.record(z.string(), groupedTransactionsSchema),
 })
 
+export type Transaction = z.infer<typeof transactionSchema>
 export type GroupedTransactions = z.infer<typeof groupedTransactionsSchema>
 export type MonthlySummary = z.infer<typeof monthlySummarySchema>
 export type Sumaries = Record<string, MonthlySummary>
