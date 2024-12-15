@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Card from './Card'
 import UploadFileIcon from '../icons/uploadFile'
 import UploadIcon from '../icons/uploadIcon'
+import Button from './Button'
 
 interface Props {
 	onUploadSuccess: (results: unknown) => void
@@ -65,13 +66,9 @@ export default function FileUploader({ onUploadSuccess }: Props) {
 				</ul>
 			</section>
 
-			<button
-				onClick={handleUpload}
-				className="py-2 px-6 bg-transparent text-cyan-500 border-2 border-cyan-500 font-bold rounded-lg"
-				disabled={!file}
-			>
+			<Button onClick={handleUpload} disabled={!file}>
 				<UploadIcon /> Upload
-			</button>
+			</Button>
 		</Card>
 	)
 }
