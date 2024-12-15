@@ -1,11 +1,15 @@
 import { useState } from 'react'
-import { useMonthlyTransactions } from '../store/transactions'
+import { useMonthlySummaries } from '../store/transactions'
 import Modal from '../components/modal'
 import FileUploader from '../components/FileUploader'
-import { monthlySummarySchema } from '../../../schemas/transactions.schema'
+import SummaryView from '../components/SummaryView'
+import UploadIcon from '../icons/uploadIcon'
+import { uploadSummaryResponseSchema } from '../../../schemas/responses.schema'
+
+import { Button } from '@mui/material'
 
 export default function Index() {
-	const { summaries, addSummary } = useMonthlyTransactions()
+	const { summaries, addSummary } = useMonthlySummaries()
 	const [showUploader, setShowUploader] = useState<boolean>(false)
 
 	const handleToggleUploader = () => {
@@ -13,25 +17,20 @@ export default function Index() {
 	}
 
 	const onUploadSuccess = (results: unknown) => {
+		console.log('onUploadSuccess => ', results)
 		handleToggleUploader()
-		const parsed = monthlySummarySchema.parse(results)
-		addSummary('june', parsed)
-		console.log('Parsed => ', parsed)
+		const { month, monthlySummary } = uploadSummaryResponseSchema.parse(results)
+		addSummary(month, monthlySummary)
 	}
 
 	return (
 		<>
-			<h1 className="text-2xl">Summaries</h1>
-			<p>See transactions across months</p>
+			<SummaryView sumaries={summaries} />
 
-			{Object.keys(summaries).length === 0 ? (
-				<p>No summaries to display</p>
-			) : (
-				<p>Summaries to display</p>
-			)}
-
-			<button onClick={handleToggleUploader}>Upload new file</button>
-			<Modal display={showUploader}>
+			<Button onClick={handleToggleUploader} variant="outlined" color="primary">
+				<UploadIcon /> Upload Summary
+			</Button>
+			<Modal display={showUploader} toggler={handleToggleUploader}>
 				<FileUploader onUploadSuccess={onUploadSuccess} />
 			</Modal>
 		</>

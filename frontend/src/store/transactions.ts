@@ -2,17 +2,21 @@ import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { z } from 'zod'
 
-import { monthlySummarySchema } from '../../../schemas/transactions.schema'
+import {
+	monthlySummarySchema,
+	Sumaries,
+} from '../../../schemas/transactions.schema'
+import { categorySchema } from '../../../schemas/categories.schema'
 
 interface TransactionState {
-	summaries: Record<string, z.infer<typeof monthlySummarySchema>>
+	summaries: Sumaries
 	addSummary: (
 		month: string,
-		transaction: z.infer<typeof monthlySummarySchema>
+		summary: z.infer<typeof monthlySummarySchema>
 	) => void
 }
 
-export const useMonthlyTransactions = create<TransactionState>()(
+export const useMonthlySummaries = create<TransactionState>()(
 	devtools(
 		set => ({
 			summaries: {},
@@ -34,4 +38,26 @@ export const useMonthlyTransactions = create<TransactionState>()(
 			name: 'transactions',
 		}
 	)
+)
+
+interface CategoryState {
+	categories: z.infer<typeof categorySchema>
+	addToCategory: (category: string, transactionName: string) => void
+}
+
+export const useCategories = create<CategoryState>()(
+	devtools(set => ({
+		categories: categorySchema.parse({}),
+		addToCategory: (category, transactionName) =>
+			set(({ categories, ...state }) => {
+				const currentCategoryState = categories[category] || []
+				return {
+					...state,
+					categories: {
+						...categories,
+						category: [...currentCategoryState, transactionName],
+					},
+				}
+			}),
+	}))
 )

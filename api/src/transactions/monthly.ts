@@ -36,19 +36,19 @@ const createMonthlySummary = (
 ): z.infer<typeof monthlySummarySchema> => {
 	return monthlyTransactions.reduce(
 		(acc: z.infer<typeof monthlySummarySchema>, transaction) => {
-			const { bookingDate, name, amount } = transaction
-			if (!acc.transactions[name]) {
-				acc.transactions[name] = {
+			const { name, amount } = transaction
+			if (!acc.monthlyTransactions[name]) {
+				acc.monthlyTransactions[name] = {
 					total: 0,
 					transactions: [],
 				}
 			}
 
-			acc.transactions[name].total += amount
-			acc.transactions[name].transactions.push(transaction)
+			acc.monthlyTransactions[name].total += amount
+			acc.monthlyTransactions[name].transactions.push(transaction)
 			acc.total += amount
 			return acc
 		},
-		{ total: 0, transactions: {} }
+		{ total: 0, monthlyTransactions: {} }
 	)
 }
