@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import {
-	monthlyTransactionSchema,
-	monthlyOversightSchema,
+	transactionSchema,
+	monthlySummarySchema,
 } from '../../../schemas/transactions.schema'
 
 export const handleMonthlyTransactions = async (data: any[]) => {
@@ -13,7 +13,7 @@ const structureFileContents = async (data: any[]) => {
 	const [header, categories, ...rows] = data
 
 	const monthlyTransactions = rows.filter(row => row.length > 0).map(parseRow)
-	const monthlyOversight = createMonthlyOversight(monthlyTransactions)
+	const monthlyOversight = createMonthlySummary(monthlyTransactions)
 
 	return monthlyOversight
 }
@@ -22,7 +22,7 @@ type rowContent = number | string
 
 const parseRow = (row: rowContent[]) => {
 	const [bookingDate, transactionDate, name, amount, balance] = row
-	return monthlyTransactionSchema.parse({
+	return transactionSchema.parse({
 		bookingDate,
 		transactionDate,
 		name,
@@ -31,11 +31,11 @@ const parseRow = (row: rowContent[]) => {
 	})
 }
 
-const createMonthlyOversight = (
-	monthlyTransactions: z.infer<typeof monthlyTransactionSchema>[]
-): z.infer<typeof monthlyOversightSchema> => {
+const createMonthlySummary = (
+	monthlyTransactions: z.infer<typeof transactionSchema>[]
+): z.infer<typeof monthlySummarySchema> => {
 	return monthlyTransactions.reduce(
-		(acc: z.infer<typeof monthlyOversightSchema>, transaction) => {
+		(acc: z.infer<typeof monthlySummarySchema>, transaction) => {
 			const { bookingDate, name, amount } = transaction
 			if (!acc.transactions[name]) {
 				acc.transactions[name] = {

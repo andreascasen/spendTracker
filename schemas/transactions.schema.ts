@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const monthlyTransactionSchema = z.object({
+export const transactionSchema = z.object({
 	bookingDate: z.string(),
 	transactionDate: z.string(),
 	name: z.string(),
@@ -8,13 +8,13 @@ export const monthlyTransactionSchema = z.object({
 	balance: z.number(),
 })
 
-export const monthlyOversightSchema = z.object({
+export const monthlySummarySchema = z.object({
 	total: z.number(),
 	transactions: z.record(
 		z.string(),
 		z.object({
 			total: z.number(),
-			transactions: z.array(monthlyTransactionSchema),
+			transactions: z.array(transactionSchema),
 		})
 	),
 })
