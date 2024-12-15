@@ -12,6 +12,7 @@
   "dependencies": {
     "node-xlsx": "^0.24.0",
     "react": "^18.3.1",
+    "react-charts": "3.0.0-beta.57",
     "react-dom": "^18.3.1",
     "react-router": "^7.0.2",
     "tailwindcss": "^3.4.16",
