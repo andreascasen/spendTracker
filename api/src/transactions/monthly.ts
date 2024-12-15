@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import {
-	monthlyTransactionSchema,
-	monthlyOversightSchema,
+	transactionSchema,
+	monthlySummarySchema,
 } from '../../../schemas/transactions.schema'
 
 export const handleMonthlyTransactions = async (data: any[]) => {
@@ -9,12 +9,11 @@ export const handleMonthlyTransactions = async (data: any[]) => {
 	return structuredData
 }
 
-const structureFileContents = (data: any[]) => {
+const structureFileContents = async (data: any[]) => {
 	const [header, categories, ...rows] = data
 
 	const monthlyTransactions = rows.filter(row => row.length > 0).map(parseRow)
-	const monthlyOversight = createMonthlyOversight(monthlyTransactions)
-	console.log('parsedData => ', monthlyOversight)
+	const monthlyOversight = createMonthlySummary(monthlyTransactions)
 
 	return monthlyOversight
 }
@@ -23,7 +22,7 @@ type rowContent = number | string
 
 const parseRow = (row: rowContent[]) => {
 	const [bookingDate, transactionDate, name, amount, balance] = row
-	return monthlyTransactionSchema.parse({
+	return transactionSchema.parse({
 		bookingDate,
 		transactionDate,
 		name,
@@ -32,23 +31,24 @@ const parseRow = (row: rowContent[]) => {
 	})
 }
 
-const createMonthlyOversight = async (
-	monthlyTransactions: z.infer<typeof monthlyTransactionSchema>[]
-) => {
+const createMonthlySummary = (
+	monthlyTransactions: z.infer<typeof transactionSchema>[]
+): z.infer<typeof monthlySummarySchema> => {
 	return monthlyTransactions.reduce(
-		(acc: z.infer<typeof monthlyOversightSchema>, transaction) => {
+		(acc: z.infer<typeof monthlySummarySchema>, transaction) => {
 			const { bookingDate, name, amount } = transaction
-			if (!acc[name]) {
-				acc[name] = {
+			if (!acc.transactions[name]) {
+				acc.transactions[name] = {
 					total: 0,
 					transactions: [],
 				}
 			}
 
-			acc[name].total += amount
-			acc[name].transactions.push(transaction)
+			acc.transactions[name].total += amount
+			acc.transactions[name].transactions.push(transaction)
+			acc.total += amount
 			return acc
 		},
-		{}
+		{ total: 0, transactions: {} }
 	)
 }

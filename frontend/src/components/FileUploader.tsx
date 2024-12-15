@@ -3,7 +3,11 @@ import Card from './Card'
 import UploadFileIcon from '../icons/uploadFile'
 import UploadIcon from '../icons/uploadIcon'
 
-export default function FileUploader() {
+interface Props {
+	onUploadSuccess: (results: unknown) => void
+}
+
+export default function FileUploader({ onUploadSuccess }: Props) {
 	const [file, setFile] = useState<File | null>(null)
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,8 +29,9 @@ export default function FileUploader() {
 					body: formData,
 				})
 
-				const response = await result.json()
-				console.log('Response => ', response)
+				const { monthlyTransactions } = await result.json()
+
+				onUploadSuccess(monthlyTransactions)
 			} catch (error) {
 				console.error('Error => ', error)
 			}
