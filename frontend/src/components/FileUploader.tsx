@@ -25,8 +25,8 @@ export default function FileUploader() {
 					body: formData,
 				})
 
-				const response = await result.json()
-				console.log('Response => ', response)
+				const { monthlyTransactions } = await result.json()
+				console.log('Response => ', monthlyTransactions)
 			} catch (error) {
 				console.error('Error => ', error)
 			}
